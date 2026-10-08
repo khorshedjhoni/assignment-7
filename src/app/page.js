@@ -1,7 +1,9 @@
+import HeroSection from "./components/HeroSection";
+
 export default function Home() {
   return (
-    <div>
-      ২০২৬ সালে সাহিত্যে নোবেল পুরস্কার পেয়েছেন কানাডার কবি, প্রাবন্ধিক ও অনুবাদক অ্যান কার্সন।
-    </div>
+   <div>
+    <HeroSection></HeroSection>
+   </div>
   );
 }
