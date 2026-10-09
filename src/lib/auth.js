@@ -1,0 +1,31 @@
+import { betterAuth } from "better-auth";
+import { mongodbAdapter } from "better-auth/adapters/mongodb";
+import { MongoClient } from "mongodb";
+
+
+if (!process.env.MONGODB_URI) {
+  throw new Error("Please add your MONGODB_URI to .env");
+}
+
+const client = new MongoClient(process.env.MONGODB_URI);
+
+const db = client.db("bazar-dor");
+
+
+export const auth = betterAuth({
+  database: mongodbAdapter(db, {
+    client,
+  }),
+
+  emailAndPassword: {
+    enabled: true,
+  },
+
+  socialProviders: {
+    google: {
+      enabled: true,
+      clientId: process.env.BETTER_AUTH_GOOGLE_CLIENT_ID,
+      clientSecret: process.env.BETTER_AUTH_GOOGLE_CLIENT_SECRET,
+    },
+  },
+});
