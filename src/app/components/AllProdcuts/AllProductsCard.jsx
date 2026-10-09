@@ -5,7 +5,7 @@ const AllProductsCard = ({ product }) => {
     return (
         <div>
       <Link
-        href={`/products/${product.slug}`}
+        href={`/product/${product.slug}`}
         className="group block rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-200 hover:shadow-md"
       >
         {" "}
