@@ -5,7 +5,7 @@ async function getProductData(slug) {
   try {
     const response = await fetch(
       "https://api.abcz.workers.dev/api/bazardor/products",
-      { cache: "no-store" },
+      { cache: "no-store" }
     );
 
     if (!response.ok) return null;
@@ -17,7 +17,7 @@ async function getProductData(slug) {
   }
 }
 
-export default async function ProductDetailsPage({ params }) {
+const ProductDetailsPage = async ({ params }) => {
   const { slug } = await params;
   const product = await getProductData(slug);
 
@@ -38,6 +38,11 @@ export default async function ProductDetailsPage({ params }) {
 
   const markets = product.markets || [];
   const todayPrice = Number(product.today) || 0;
+  const yesterdayPrice = Number(product.yesterday) || 0;
+
+  
+  const priceDifference = Math.abs(todayPrice - yesterdayPrice);
+  const isPriceUp = todayPrice >= yesterdayPrice;
 
   const minPrice = markets.length
     ? Math.min(...markets.map((m) => Number(m.min)))
@@ -51,8 +56,8 @@ export default async function ProductDetailsPage({ params }) {
     ? Math.round(
         markets.reduce(
           (total, m) => total + (Number(m.min) + Number(m.max)) / 2,
-          0,
-        ) / markets.length,
+          0
+        ) / markets.length
       )
     : todayPrice;
 
@@ -68,7 +73,6 @@ export default async function ProductDetailsPage({ params }) {
   const unitName =
     unitNames[String(product.unit).toLowerCase()] || product.unit || "একক";
   const priceChange = product.change || {};
-  const changeAmount = Math.abs(Number(priceChange.pct) || 0);
   const percentage = Math.abs(Number(priceChange.pct) || 0);
 
   return (
@@ -91,10 +95,10 @@ export default async function ProductDetailsPage({ params }) {
                   {product.categoryNameBn ? `- ${product.categoryNameBn}` : ""}
                 </p>
 
+              
                 <p className="text-xs text-gray-500 pt-1">
-                  গতকালের তুলনায় আজ দাম{" "}
-                  {priceChange.dir === "up" ? "বেড়েছে" : "কমেছে"} :{" "}
-                  <span className="font-bold">{changeAmount}</span> টাকা
+                  গতকালের তুলনায় আজ দাম {isPriceUp ? "বেড়েছে" : "কমেছে"} -{" "}
+                  <span className="font-bold">{priceDifference}</span> টাকা
                 </p>
               </div>
             </div>
@@ -106,15 +110,18 @@ export default async function ProductDetailsPage({ params }) {
               </p>
               <p className="text-xs text-gray-500">টাকা / {unitName}</p>
 
-              <div className="mt-1 flex items-center justify-center gap-1 text-xs font-semibold text-rose-600">
-                <span>▲</span>
+              <div
+                className={`mt-1 flex items-center justify-center gap-1 text-xs font-semibold ${
+                  priceChange.dir === "down" ? "text-emerald-600" : "text-rose-600"
+                }`}
+              >
+                <span>{priceChange.dir === "down" ? "▼" : "▲"}</span>
                 <span>{percentage}%</span>
               </div>
             </div>
           </div>
         </section>
 
-       
         <section className="space-y-3">
           <div>
             <h2 className="text-lg font-bold text-gray-900">
@@ -129,7 +136,6 @@ export default async function ProductDetailsPage({ params }) {
           />
         </section>
 
-       
         <section className="space-y-3">
           <div className="flex flex-wrap items-end justify-between gap-2">
             <div>
@@ -148,3 +154,5 @@ export default async function ProductDetailsPage({ params }) {
     </main>
   );
 }
+
+export default ProductDetailsPage;
