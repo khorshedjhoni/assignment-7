@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import CategoryLinks from './CategoryLinks';
 
 const NavLink = async () => {
     let categories = [];
@@ -22,26 +23,11 @@ const NavLink = async () => {
 
     return (
         <nav
-            aria-label="Categories"
-            className="border-t border-gray-100 bg-gray-50/60"
-        >
-            <ul className="mx-auto flex max-w-6xl items-center gap-1 overflow-x-auto px-4 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                {categories.map((cat) => (
-                    <li key={cat.id} className="shrink-0">
-                        <Link
-                            href={`/category/${cat.slug}`}
-                            className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-gray-800 transition hover:bg-emerald-50 hover:text-[#0b8a4b]"
-                        >
-                            <span className="text-base leading-none">
-                                {cat.icon}
-                            </span>
-
-                            {cat.nameBn}
-                        </Link>
-                    </li>
-                ))}
-            </ul>
-        </nav>
+    aria-label="Categories"
+    className="border-t border-gray-100 bg-gray-50/60"
+  >
+    <CategoryLinks categories={categories} />
+  </nav>
     );
 };
 

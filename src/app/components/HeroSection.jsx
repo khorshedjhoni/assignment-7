@@ -6,9 +6,9 @@ const HeroSection = () => {
   const date = new Date().toLocaleDateString('bn-BD', {
     dateStyle: 'full',
   });
-
+ 
   return (
-    <section className="bg-[#f2f5f3] py-10 px-4 sm:px-6 lg:px-8">
+    <section className="bg-[#f2f5f3] py-10 px-4 sm:px-6 lg:px-8" >
       <div className="max-w-6xl mx-auto bg-white rounded-3xl p-8 sm:p-12 shadow-sm flex flex-col md:flex-row items-center justify-between gap-8">
         
        
@@ -32,13 +32,13 @@ const HeroSection = () => {
 
          
           <div className="pt-2">
-            <Link
-              href="#সব-পণ্য"
-              className="inline-block bg-[#2e7d32] hover:bg-[#256628] text-white font-medium text-sm px-6 py-3 rounded-lg transition-colors duration-200 shadow-sm"
-            >
-              সব পণ্য দেখুন
-            </Link>
-          </div>
+  <Link
+    href="#সব-পণ্য"
+    className="inline-block bg-[#2e7d32] hover:bg-[#256628] text-white font-medium text-sm px-6 py-3 rounded-lg transition-colors duration-200 shadow-sm"
+  >
+    সব পণ্য দেখুন
+  </Link>
+</div>
         </div>
 
      

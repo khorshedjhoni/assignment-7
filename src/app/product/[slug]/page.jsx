@@ -1,6 +1,13 @@
 import PriceTable from "../../components/PriceTable";
 import PriceSummary from "../../components/PriceSummary";
 
+
+const toBengaliNumber = (num) => {
+  if (num === undefined || num === null) return "";
+  const bengaliDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
+  return String(num).replace(/\d/g, (digit) => bengaliDigits[digit]);
+};
+
 async function getProductData(slug) {
   try {
     const response = await fetch(
@@ -96,7 +103,7 @@ const ProductDetailsPage = async ({ params }) => {
 
                 <p className="text-xs text-gray-500 pt-1">
                   গতকালের তুলনায় আজ দাম {isPriceUp ? "বেড়েছে" : "কমেছে"} :{" "}
-                  <span className="font-bold">{priceDifference}</span> টাকা
+                  <span className="font-bold">{toBengaliNumber(priceDifference)}</span> টাকা
                 </p>
               </div>
             </div>
@@ -104,7 +111,7 @@ const ProductDetailsPage = async ({ params }) => {
             <div className="rounded-2xl bg-gray-50 p-4 text-center min-w-[130px]">
               <p className="text-xs text-gray-500">আজকের দাম</p>
               <p className="text-3xl font-black text-gray-900 my-1">
-                {todayPrice}
+                {toBengaliNumber(todayPrice)}
               </p>
               <p className="text-xs text-gray-500">টাকা / {unitName}</p>
 
@@ -116,7 +123,7 @@ const ProductDetailsPage = async ({ params }) => {
                 }`}
               >
                 <span>{priceChange.dir === "down" ? "▼" : "▲"}</span>
-                <span>{percentage}%</span>
+                <span>{toBengaliNumber(percentage)}%</span>
               </div>
             </div>
           </div>
@@ -130,9 +137,9 @@ const ProductDetailsPage = async ({ params }) => {
           </div>
 
           <PriceSummary
-            minPrice={minPrice}
-            maxPrice={maxPrice}
-            avgPrice={avgPrice}
+            minPrice={toBengaliNumber(minPrice)}
+            maxPrice={toBengaliNumber(maxPrice)}
+            avgPrice={toBengaliNumber(avgPrice)}
           />
         </section>
 

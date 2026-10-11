@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import CategoryCard from './CategoryCard';
+import Link from 'next/link';
 
 const Category = ({ products = [], category }) => {
   const categoryName = category.nameBn || category.name;
@@ -66,20 +67,35 @@ const Category = ({ products = [], category }) => {
            </div>
 
            {/* Product Grid / Empty State (Now correctly nested inside max-w-6xl) */}
-           {sortedProducts.length === 0 ? (
-               <p className="py-12 text-center text-gray-500 font-medium">
-                   এই ক্যাটাগরিতে কোনো পণ্য পাওয়া যায়নি।
-               </p>
-           ) : (
-               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                   {sortedProducts.map((product) => (
-                       <CategoryCard
-                           key={product.id}
-                           product={product}
-                       />
-                   ))}
-               </div>
-           )}
+         {sortedProducts.length === 0 ? (
+  <div className="rounded-2xl border border-[#dfe8e0] bg-white px-5 py-12 text-center">
+    <div className="mb-3 text-4xl">🛒</div>
+
+    <h2 className="text-lg font-bold text-gray-800">
+      এই ক্যাটাগরিতে কোনো পণ্য পাওয়া যায়নি।
+    </h2>
+
+    <p className="mt-2 text-sm text-gray-500">
+      অন্য ক্যাটাগরির পণ্য দেখতে হোম পেজে ফিরে যান।
+    </p>
+
+    <Link
+      href="/"
+      className="mt-5 inline-flex rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700"
+    >
+      হোম পেজে ফিরে যান
+    </Link>
+  </div>
+) : (
+  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    {sortedProducts.map((product) => (
+      <CategoryCard
+        key={product.slug}
+        product={product}
+      />
+    ))}
+  </div>
+)}
 
          </div>
        </main>

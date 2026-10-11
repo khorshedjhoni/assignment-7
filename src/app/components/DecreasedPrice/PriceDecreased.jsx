@@ -21,9 +21,10 @@ const PriceDecreased = async () => {
   );
 
   const sortedProducts = decreasedProducts.sort(
-    (a, b) => b.change.pct - a.change.pct,
-  );
-  const topSixProducts = sortedProducts.slice(0, 6);
+  (a, b) => Math.abs(b.change.pct) - Math.abs(a.change.pct)
+);
+
+const topSixProducts = sortedProducts.slice(0, 6);
   return (
     <section className="bg-[#f1f5f0] py-8">
       <div className="mx-auto max-w-6xl px-4">

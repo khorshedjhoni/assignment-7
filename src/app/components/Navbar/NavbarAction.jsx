@@ -1,26 +1,49 @@
+
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useSession, signOut } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { useSession, authClient } from "@/lib/auth-client";
 import { FiUser } from "react-icons/fi";
 import { TbLogout2 } from "react-icons/tb";
 
 export default function NavbarAction() {
+  const router = useRouter();
   const { data: session, isPending } = useSession();
   const user = session?.user;
+
+  const [signingOut, setSigningOut] = useState(false);
 
   const date = new Date().toLocaleDateString("bn-BD", {
     dateStyle: "full",
   });
 
   const onSignOut = async () => {
+    if (signingOut) return;
+
+    setSigningOut(true);
+
     try {
-      await signOut();
-      <Link href="/" />;
+      const { error } = await authClient.signOut();
+
+      if (error) {
+        toast.error(error.message || "সাইন আউট করা যায়নি।");
+        return;
+      }
+
+      toast.success("সফলভাবে সাইন আউট হয়েছে!");
+
+      // Better Auth updates the shared session.
+      router.replace("/");
+      router.refresh();
     } catch (error) {
       console.error("Sign out failed:", error);
+      toast.error("সাইন আউট করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+    } finally {
+      setSigningOut(false);
     }
   };
 
@@ -48,12 +71,12 @@ export default function NavbarAction() {
         </span>
       </Link>
 
-      {/* Right Side Actions */}
+     
       <div className="flex items-center gap-5">
         {isPending ? null : user ? (
-          /* Profile Dropdown Menu */
+     
           <div className="dropdown dropdown-end">
-            {/* Trigger Button / Avatar & Name */}
+          
             <div
               tabIndex={0}
               role="button"
@@ -93,12 +116,12 @@ export default function NavbarAction() {
               </svg>
             </div>
 
-            {/* Dropdown Menu Content */}
+           
             <ul
               tabIndex={0}
-              className="dropdown-content z-[1] menu p-3 shadow-lg bg-white rounded-2xl w-72 border border-gray-100 mt-2 space-y-1"
+              className="dropdown-content z-1 menu p-3 shadow-lg bg-white rounded-2xl w-72 border border-gray-100 mt-2 space-y-1"
             >
-              {/* User Info Header Box */}
+             
               <div className="px-3 py-2 mb-1 border-b border-gray-100">
                 <p className="font-bold text-sm text-gray-900">
                   {user.name}
@@ -124,10 +147,13 @@ export default function NavbarAction() {
                 <button
                   type="button"
                   onClick={onSignOut}
-                  className="w-full flex items-center gap-3 text-sm text-red-600 font-medium px-3 py-2 rounded-xl hover:bg-red-50 transition-colors cursor-pointer text-left"
+                  disabled={signingOut}
+                  className="w-full flex items-center gap-3 text-sm text-red-600 font-medium px-3 py-2 rounded-xl hover:bg-red-50 transition-colors cursor-pointer text-left disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <TbLogout2 className="text-red-500 text-base" />
-                  <span>সাইন আউট</span>
+                  <span>
+                    {signingOut ? "সাইন আউট হচ্ছে..." : "সাইন আউট"}
+                  </span>
                 </button>
               </li>
             </ul>
@@ -154,3 +180,4 @@ export default function NavbarAction() {
     </div>
   );
 }
+

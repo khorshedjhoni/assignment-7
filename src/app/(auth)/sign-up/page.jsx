@@ -3,12 +3,13 @@
 import { signIn, signUp } from "@/lib/auth-client";
 import Link from "next/link";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 
 const SignUpPage = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Handle form submission
+
   const onSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -20,7 +21,7 @@ const SignUpPage = () => {
     const password = formData.get("password");
     const confirmPassword = formData.get("confirmPassword");
 
-    // Check passwords match
+   
     if (password !== confirmPassword) {
       setError("পাসওয়ার্ড মিলছে না।");
       return;
@@ -39,12 +40,14 @@ const SignUpPage = () => {
         setError(error.message);
         return;
       }
-
-      // Redirect or handle successful sign up if needed
+      else{
+        toast.success("সফলভাবে সাইন আপ হয়েছে! অনুগ্রহ করে লগইন করুন।");
+      }
     } catch {
       setError("সাইন আপ ব্যর্থ হয়েছে। আবার চেষ্টা করুন।");
     } finally {
       setLoading(false);
+      toast.error("সাইন আপ ব্যর্থ হয়েছে। আবার চেষ্টা করুন।");
     }
   };
 
@@ -55,9 +58,11 @@ const SignUpPage = () => {
         provider: "google",
         callbackURL: "/",
       });
+      toast.success("Google দিয়ে সাইন আপ সফল হয়েছে!");
     } catch {
       setError("Google দিয়ে সাইন ইন করা যায়নি।");
     }
+    toast.error("Google দিয়ে সাইন ইন করা যায়নি।");
   };
 
   // GitHub sign in
@@ -67,9 +72,11 @@ const SignUpPage = () => {
         provider: "github",
         callbackURL: "/",
       });
+      toast.success("GitHub দিয়ে সাইন আপ সফল হয়েছে!");
     } catch {
       setError("GitHub দিয়ে সাইন ইন করা যায়নি।");
     }
+    toast.error("GitHub দিয়ে সাইন ইন করা যায়নি।");
   };
 
   return (

@@ -3,21 +3,21 @@
 import { signIn } from "@/lib/auth-client";
 import Link from "next/link";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 
 const SignInPage = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Handle form submission for Email Sign In
+  // 1. Handle Email & Password Sign In
   const onSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     const formData = new FormData(e.currentTarget);
     const email = formData.get("email");
     const password = formData.get("password");
-
-    setLoading(true);
 
     try {
       const { error } = await signIn.email({
@@ -27,37 +27,54 @@ const SignInPage = () => {
       });
 
       if (error) {
-        setError(error.message || "সাইন ইন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।");
-        return;
+        const errorMsg = error.message || "সাইন ইন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।";
+        setError(errorMsg);
+        toast.error(errorMsg);
+      } else {
+        toast.success("সফলভাবে সাইন ইন হয়েছে!");
       }
-    } catch {
-      setError("সাইন ইন করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+    } catch (err) {
+      const errorMsg = "সাইন ইন করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।";
+      setError(errorMsg);
+      toast.error(errorMsg);
     } finally {
       setLoading(false);
     }
   };
 
-  // Google Sign In
+  // 2. Google Sign In
   const handleSignInWithGoogle = async () => {
     try {
-      await signIn.social({
+      const { error } = await signIn.social({
         provider: "google",
         callbackURL: "/",
       });
-    } catch {
-      setError("Google দিয়ে সাইন ইন করা যায়নি।");
+
+      if (error) {
+        toast.error(error.message || "Google দিয়ে সাইন ইন ব্যর্থ হয়েছে।");
+      } else {
+        toast.success("Google দিয়ে সাইন ইন সফল হয়েছে!");
+      }
+    } catch (err) {
+      toast.error("Google দিয়ে সাইন ইন করা যায়নি।");
     }
   };
 
-  // GitHub Sign In
+  // 3. GitHub Sign In
   const handleSignInWithGitHub = async () => {
     try {
-      await signIn.social({
+      const { error } = await signIn.social({
         provider: "github",
         callbackURL: "/",
       });
-    } catch {
-      setError("GitHub দিয়ে সাইন ইন করা যায়নি।");
+
+      if (error) {
+        toast.error(error.message || "GitHub দিয়ে সাইন ইন ব্যর্থ হয়েছে।");
+      } else {
+        toast.success("GitHub দিয়ে সাইন ইন সফল হয়েছে!");
+      }
+    } catch (err) {
+      toast.error("GitHub দিয়ে সাইন ইন করা যায়নি।");
     }
   };
 
@@ -203,4 +220,3 @@ const SignInPage = () => {
 };
 
 export default SignInPage;
-

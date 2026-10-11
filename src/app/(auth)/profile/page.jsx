@@ -1,32 +1,24 @@
+
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import { useSession, authClient } from "@/lib/auth-client";
-import NavbarAction from "@/app/components/Navbar/NavbarAction"; // Adjust path if necessary
 
 export default function ProfilePage() {
+  const router = useRouter();
   const { data: session, isPending, refetch } = useSession();
   const user = session?.user;
 
-  const [name, setName] = useState("");
+  const [name, setName] = useState(() => user?.name || "");
   const [loading, setLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [error, setError] = useState("");
+  const [signingOut, setSigningOut] = useState(false);
 
-  // Populate name input when session user data loads
-  useEffect(() => {
-    if (user?.name) {
-      setName(user.name);
-    }
-  }, [user]);
-
-  // Handle Profile Name Update
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
-    setError("");
-    setSuccessMessage("");
     setLoading(true);
 
     try {
@@ -35,16 +27,45 @@ export default function ProfilePage() {
       });
 
       if (error) {
-        setError(error.message || "নাম আপডেট করতে সমস্যা হয়েছে।");
+        toast.error(error.message || "নাম আপডেট করতে সমস্যা হয়েছে।");
         return;
       }
 
-      setSuccessMessage("প্রোফাইল সফলভাবে আপডেট করা হয়েছে!");
-      if (refetch) refetch(); // Refresh session data
+      toast.success("প্রোফাইল সফলভাবে আপডেট করা হয়েছে!");
+
+      if (refetch) {
+        await refetch();
+      }
     } catch (err) {
-      setError("একটি ত্রুটি ঘটেছে। আবার চেষ্টা করুন।");
+      toast.error("একটি ত্রুটি ঘটেছে। আবার চেষ্টা করুন।");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const onSignOut = async () => {
+    if (signingOut) return;
+
+    setSigningOut(true);
+
+    try {
+      const { error } = await authClient.signOut();
+
+      if (error) {
+        toast.error(error.message || "সাইন আউট করা যায়নি।");
+        return;
+      }
+
+      toast.success("সফলভাবে সাইন আউট হয়েছে!");
+
+      // Refresh the shared session and redirect to the home page.
+      router.replace("/");
+      router.refresh();
+    } catch (error) {
+      console.error("Sign out failed:", error);
+      toast.error("সাইন আউট করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+    } finally {
+      setSigningOut(false);
     }
   };
 
@@ -58,14 +79,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-[#f8fafa] flex flex-col">
-      {/* Top Navbar Section */}
-      <header className="bg-white border-b border-gray-100 shadow-xs">
-        <NavbarAction />
-      </header>
-
-      {/* Main Body Content */}
       <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-8">
-        {/* Page Title Header */}
         <div className="mb-6 space-y-1">
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
             আমার প্রোফাইল
@@ -75,7 +89,6 @@ export default function ProfilePage() {
           </p>
         </div>
 
-        {/* User Card Info Banner */}
         <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm flex flex-col sm:flex-row items-center sm:items-start gap-4 mb-6">
           {user?.image ? (
             <Image
@@ -95,18 +108,21 @@ export default function ProfilePage() {
             <h2 className="text-lg font-bold text-slate-900">
               {user?.name || "User Name"}
             </h2>
-            <p className="text-sm text-slate-500">{user?.email || "email@example.com"}</p>
+            <p className="text-sm text-slate-500">
+              {user?.email || "email@example.com"}
+            </p>
           </div>
 
-          <Link
-            href="/sign-in"
-            className="border border-red-200 text-red-600 hover:bg-red-50 text-xs font-semibold px-4 py-2 rounded-xl transition-colors"
+          <button
+            type="button"
+            onClick={onSignOut}
+            disabled={signingOut}
+            className="border border-red-200 text-red-600 hover:bg-red-50 text-xs font-semibold px-4 py-2 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            সাইন আউট
-          </Link>
+            {signingOut ? "সাইন আউট হচ্ছে..." : "সাইন আউট"}
+          </button>
         </div>
 
-        {/* Form Container matching Figma Layout */}
         <div className="bg-white rounded-2xl border border-slate-100 p-6 sm:p-8 shadow-sm">
           <h3 className="text-base font-bold text-slate-900 mb-4 border-b border-slate-100 pb-3">
             তথ্য
@@ -119,6 +135,7 @@ export default function ProfilePage() {
                   নাম
                 </span>
               </label>
+
               <input
                 type="text"
                 value={name}
@@ -129,13 +146,13 @@ export default function ProfilePage() {
               />
             </div>
 
-            {/* Email Field (Read-only for security) */}
             <div className="form-control w-full">
               <label className="label pb-1.5 pt-0">
                 <span className="label-text font-semibold text-slate-800 text-xs">
                   ইমেইল (পরিবর্তনযোগ্য নয়)
                 </span>
               </label>
+
               <input
                 type="email"
                 value={user?.email || ""}
@@ -144,22 +161,10 @@ export default function ProfilePage() {
               />
             </div>
 
-            {error && (
-              <p className="text-sm text-red-600" role="alert">
-                {error}
-              </p>
-            )}
-
-            {successMessage && (
-              <p className="text-sm text-emerald-600 font-medium" role="alert">
-                {successMessage}
-              </p>
-            )}
-
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#0b8a4b] hover:bg-[#09733e] text-white font-medium py-3 rounded-xl mt-4 text-sm transition-colors shadow-sm cursor-pointer"
+              className="w-full bg-[#0b8a4b] hover:bg-[#09733e] text-white font-medium py-3 rounded-xl mt-4 text-sm transition-colors shadow-sm cursor-pointer disabled:opacity-50"
             >
               {loading ? "আপডেট হচ্ছে..." : "আপডেট"}
             </button>
