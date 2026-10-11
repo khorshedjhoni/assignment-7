@@ -6,7 +6,7 @@ export default function NotFound() {
     <div className="min-h-[80vh] hero bg-base-200 px-4 py-12">
       <div className="hero-content text-center">
         <div className="max-w-md">
-          {/* Icon Badge */}
+        
           <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-full bg-error/10 text-error animate-bounce">
             <FaExclamationTriangle className="text-4xl" />
           </div>

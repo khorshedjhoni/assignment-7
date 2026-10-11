@@ -125,7 +125,7 @@ export default function NavbarAction() {
                 </Link>
               </li>
 
-              {/* Sign Out Button */}
+              
               <li>
                 <button
                   type="button"
@@ -140,7 +140,7 @@ export default function NavbarAction() {
             </ul>
           </div>
         ) : (
-          /* Logged Out State */
+          
           <>
             <Link
               href="/sign-in"
