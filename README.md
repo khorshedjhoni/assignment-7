@@ -74,11 +74,6 @@ Make sure you have the following installed:
 | `npm run start` | Start the production server          |
 | `npm run lint`  | Run lint checks, if configured       |
 
-## 🌐 Deployment
-
-The application can be deployed on [Vercel](https://vercel.com/).
-
-Connect your GitHub repository to Vercel, configure the required environment variables, and deploy your project.
 
 ## 🎯 Project Goal
 
