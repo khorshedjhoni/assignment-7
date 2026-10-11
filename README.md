@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🛒 বাজার দর | BazarDor
 
-## Getting Started
+### Your Everyday Market Price Guide
 
-First, run the development server:
+**বাজার দর (BazarDor)** is a web application designed to help users explore the latest prices of everyday essentials in Bangladesh. From rice, lentils, and vegetables to fish, meat, eggs, and spices, users can browse product information and stay informed about market prices in one place.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## ✨ Key Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+* **📊 Market Price Updates:** Explore market prices of essential everyday products.
+* **🗂️ Product Categories:** Browse products by category for easy navigation.
+* **🔐 Secure Authentication:** Sign up and sign in using Better Auth, with Google and GitHub authentication if configured.
+* **👤 User Profile Management:** View and update your profile information.
+* **📱 Responsive Design:** Enjoy a user-friendly experience across desktop, tablet, and mobile devices.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 🛠️ Technologies Used
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+* **Next.js** — React framework for building the application.
+* **React** — Component-based user interface.
+* **Tailwind CSS** — Utility-first styling for responsive layouts.
+* **DaisyUI** — Prebuilt UI components.
+* **Better Auth** — Authentication and session management.
+* **MongoDB** — Database for application data and authentication.
+* **Resend** — Email delivery for authentication-related emails, if configured.
+* **React Hot Toast** — User notifications.
+* **Git & GitHub** — Version control and source code hosting.
+* **Vercel** — Application deployment.
 
-## Learn More
+## 🚀 Getting Started
 
-To learn more about Next.js, take a look at the following resources:
+### Prerequisites
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Make sure you have the following installed:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+* Node.js
+* npm
+* Git
 
-## Deploy on Vercel
+### Installation
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Clone the repository:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   ```bash
+   git clone YOUR_GITHUB_REPOSITORY_URL
+   ```
+
+2. Navigate to the project directory:
+
+   ```bash
+   cd assignment-7
+   ```
+
+3. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+4. Configure your environment variables in a `.env.local` file. Add the variables required by your project, such as your MongoDB connection string, Better Auth secret, application URL, and email API key if applicable.
+
+5. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+6. Open http://localhost:3000 in your browser.
+
+## ⚙️ Available Scripts
+
+| Command         | Description                          |
+| --------------- | ------------------------------------ |
+| `npm run dev`   | Start the development server         |
+| `npm run build` | Build the application for production |
+| `npm run start` | Start the production server          |
+| `npm run lint`  | Run lint checks, if configured       |
+
+## 🌐 Deployment
+
+The application can be deployed on [Vercel](https://vercel.com/).
+
+Connect your GitHub repository to Vercel, configure the required environment variables, and deploy your project.
+
+## 🎯 Project Goal
+
+The goal of BazarDor is to make everyday market price information easier to access and help people explore essential products conveniently through a simple, responsive web application.
+
+---
+
+**Built with ❤️ using Next.js and React.**
