@@ -1,7 +1,7 @@
-
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useSyncExternalStore } from "react";
+
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -16,10 +16,14 @@ export default function NavbarAction() {
   const user = session?.user;
 
   const [signingOut, setSigningOut] = useState(false);
-
-  const date = new Date().toLocaleDateString("bn-BD", {
-    dateStyle: "full",
-  });
+  const date = useSyncExternalStore(
+    () => () => {},
+    () =>
+      new Date().toLocaleDateString("bn-BD", {
+        dateStyle: "full",
+      }),
+    () => "",
+  );
 
   const onSignOut = async () => {
     if (signingOut) return;
@@ -36,7 +40,6 @@ export default function NavbarAction() {
 
       toast.success("সফলভাবে সাইন আউট হয়েছে!");
 
-      // Better Auth updates the shared session.
       router.replace("/");
       router.refresh();
     } catch (error) {
@@ -52,31 +55,19 @@ export default function NavbarAction() {
       {/* Brand / Logo Section */}
       <Link href="/" className="flex items-center gap-3">
         <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#0b8a4b]">
-          <Image
-            src="/logo-icon.png"
-            alt="Logo"
-            width={40}
-            height={40}
-          />
+          <Image src="/logo-icon.png" alt="Logo" width={40} height={40} />
         </span>
 
         <span className="flex flex-col leading-tight">
-          <span className="text-xl font-bold text-gray-900">
-            বাজার দর
-          </span>
+          <span className="text-xl font-bold text-gray-900">বাজার দর</span>
 
-          <span className="min-h-[1rem] text-xs text-gray-600">
-            {date}
-          </span>
+          <span className="min-h-[1rem] text-xs text-gray-600">{date}</span>
         </span>
       </Link>
 
-     
       <div className="flex items-center gap-5">
         {isPending ? null : user ? (
-     
           <div className="dropdown dropdown-end">
-          
             <div
               tabIndex={0}
               role="button"
@@ -100,7 +91,6 @@ export default function NavbarAction() {
                 {user.name}
               </span>
 
-              {/* Dropdown Chevron Arrow */}
               <svg
                 className="w-4 h-4 text-gray-500"
                 fill="none"
@@ -116,22 +106,15 @@ export default function NavbarAction() {
               </svg>
             </div>
 
-           
             <ul
               tabIndex={0}
               className="dropdown-content z-1 menu p-3 shadow-lg bg-white rounded-2xl w-72 border border-gray-100 mt-2 space-y-1"
             >
-             
               <div className="px-3 py-2 mb-1 border-b border-gray-100">
-                <p className="font-bold text-sm text-gray-900">
-                  {user.name}
-                </p>
-                <p className="text-xs text-gray-500 truncate">
-                  {user.email}
-                </p>
+                <p className="font-bold text-sm text-gray-900">{user.name}</p>
+                <p className="text-xs text-gray-500 truncate">{user.email}</p>
               </div>
 
-              {/* Profile Link */}
               <li>
                 <Link
                   href="/profile"
@@ -151,9 +134,7 @@ export default function NavbarAction() {
                   className="w-full flex items-center gap-3 text-sm text-red-600 font-medium px-3 py-2 rounded-xl hover:bg-red-50 transition-colors cursor-pointer text-left disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <TbLogout2 className="text-red-500 text-base" />
-                  <span>
-                    {signingOut ? "সাইন আউট হচ্ছে..." : "সাইন আউট"}
-                  </span>
+                  <span>{signingOut ? "সাইন আউট হচ্ছে..." : "সাইন আউট"}</span>
                 </button>
               </li>
             </ul>
@@ -180,4 +161,3 @@ export default function NavbarAction() {
     </div>
   );
 }
-

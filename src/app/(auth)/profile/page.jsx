@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from "react";
@@ -10,38 +9,10 @@ import { useSession, authClient } from "@/lib/auth-client";
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { data: session, isPending, refetch } = useSession();
+  const { data: session, isPending } = useSession();
   const user = session?.user;
 
-  const [name, setName] = useState(() => user?.name || "");
-  const [loading, setLoading] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
-
-  const handleUpdateProfile = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      const { error } = await authClient.updateUser({
-        name: name,
-      });
-
-      if (error) {
-        toast.error(error.message || "নাম আপডেট করতে সমস্যা হয়েছে।");
-        return;
-      }
-
-      toast.success("প্রোফাইল সফলভাবে আপডেট করা হয়েছে!");
-
-      if (refetch) {
-        await refetch();
-      }
-    } catch (err) {
-      toast.error("একটি ত্রুটি ঘটেছে। আবার চেষ্টা করুন।");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const onSignOut = async () => {
     if (signingOut) return;
@@ -58,7 +29,6 @@ export default function ProfilePage() {
 
       toast.success("সফলভাবে সাইন আউট হয়েছে!");
 
-      // Refresh the shared session and redirect to the home page.
       router.replace("/");
       router.refresh();
     } catch (error) {
@@ -72,23 +42,27 @@ export default function ProfilePage() {
   if (isPending) {
     return (
       <div className="min-h-screen bg-[#f8fafa] flex items-center justify-center">
-        <div className="loading loading-spinner loading-lg text-[#0b8a4b]"></div>
+        {" "}
+        <div className="loading loading-spinner loading-lg text-[#0b8a4b]"></div>{" "}
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-[#f8fafa] flex flex-col">
+      {" "}
       <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-8">
+        {" "}
         <div className="mb-6 space-y-1">
+          {" "}
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-            আমার প্রোফাইল
-          </h1>
+            আমার প্রোফাইল{" "}
+          </h1>{" "}
           <p className="text-xs sm:text-sm text-slate-500">
-            আপনার অ্যাকাউন্টের তথ্য এখানে পরিবর্তন করুন।
-          </p>
+            আপনার অ্যাকাউন্টের তথ্য এখানে পরিবর্তন করুন।{" "}
+          </p>{" "}
         </div>
-
+        
         <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm flex flex-col sm:flex-row items-center sm:items-start gap-4 mb-6">
           {user?.image ? (
             <Image
@@ -113,22 +87,30 @@ export default function ProfilePage() {
             </p>
           </div>
 
-          <button
-            type="button"
-            onClick={onSignOut}
-            disabled={signingOut}
-            className="border border-red-200 text-red-600 hover:bg-red-50 text-xs font-semibold px-4 py-2 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {signingOut ? "সাইন আউট হচ্ছে..." : "সাইন আউট"}
-          </button>
-        </div>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/profile/update"
+              className="bg-[#0b8a4b] hover:bg-[#09733e] text-white text-xs font-semibold px-4 py-2 rounded-xl transition-colors"
+            >
+              Update
+            </Link>
 
+            <button
+              type="button"
+              onClick={onSignOut}
+              disabled={signingOut}
+              className="border border-red-200 text-red-600 hover:bg-red-50 text-xs font-semibold px-4 py-2 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {signingOut ? "সাইন আউট হচ্ছে..." : "সাইন আউট"}
+            </button>
+          </div>
+        </div>
         <div className="bg-white rounded-2xl border border-slate-100 p-6 sm:p-8 shadow-sm">
           <h3 className="text-base font-bold text-slate-900 mb-4 border-b border-slate-100 pb-3">
             তথ্য
           </h3>
 
-          <form onSubmit={handleUpdateProfile} className="space-y-4">
+          <div className="space-y-4">
             <div className="form-control w-full">
               <label className="label pb-1.5 pt-0">
                 <span className="label-text font-semibold text-slate-800 text-xs">
@@ -136,14 +118,9 @@ export default function ProfilePage() {
                 </span>
               </label>
 
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="আপনার নাম লিখুন"
-                className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition-colors"
-                required
-              />
+              <p className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800">
+                {user?.name || "User Name"}
+              </p>
             </div>
 
             <div className="form-control w-full">
@@ -160,15 +137,7 @@ export default function ProfilePage() {
                 className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-500 cursor-not-allowed"
               />
             </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-[#0b8a4b] hover:bg-[#09733e] text-white font-medium py-3 rounded-xl mt-4 text-sm transition-colors shadow-sm cursor-pointer disabled:opacity-50"
-            >
-              {loading ? "আপডেট হচ্ছে..." : "আপডেট"}
-            </button>
-          </form>
+          </div>
         </div>
       </main>
     </div>

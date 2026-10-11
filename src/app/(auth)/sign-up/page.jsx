@@ -10,74 +10,99 @@ const SignUpPage = () => {
   const [loading, setLoading] = useState(false);
 
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
+  
+const onSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
 
-    const formData = new FormData(e.currentTarget);
+  const formData = new FormData(e.currentTarget);
 
-    const name = formData.get("name");
-    const email = formData.get("email");
-    const password = formData.get("password");
-    const confirmPassword = formData.get("confirmPassword");
+  const name = String(formData.get("name") || "").trim();
+  const email = String(formData.get("email") || "").trim();
+  const password = String(formData.get("password") || "");
+  const confirmPassword = String(
+    formData.get("confirmPassword") || ""
+  );
 
-   
-    if (password !== confirmPassword) {
-      setError("পাসওয়ার্ড মিলছে না।");
+  if (password !== confirmPassword) {
+    const message = "পাসওয়ার্ড মিলছে না।";
+    setError(message);
+    toast.error(message);
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const result = await signUp.email({
+      name,
+      email,
+      password,
+    });
+
+    if (result.error) {
+      const message =
+        result.error.message ||
+        "সাইন আপ ব্যর্থ হয়েছে। আবার চেষ্টা করুন।";
+
+      setError(message);
+      toast.error(message);
       return;
     }
 
-    setLoading(true);
+    toast.success("সফলভাবে সাইন আপ হয়েছে! অনুগ্রহ করে লগইন করুন.");
 
-    try {
-      const { error } = await signUp.email({
-        name,
-        email,
-        password,
-      });
+    
+    window.location.assign("/sign-in");
+  } catch (err) {
+    const message =
+      "সাইন আপ ব্যর্থ হয়েছে। আবার চেষ্টা করুন।";
 
-      if (error) {
-        setError(error.message);
-        return;
-      }
-      else{
-        toast.success("সফলভাবে সাইন আপ হয়েছে! অনুগ্রহ করে লগইন করুন।");
-      }
-    } catch {
-      setError("সাইন আপ ব্যর্থ হয়েছে। আবার চেষ্টা করুন।");
-    } finally {
-      setLoading(false);
-      toast.error("সাইন আপ ব্যর্থ হয়েছে। আবার চেষ্টা করুন।");
-    }
-  };
+    setError(message);
+    toast.error(message);
+  } finally {
+    setLoading(false);
+  }
+};
 
-  // Google sign in
+
+
+
   const handleSignUpWithGoogle = async () => {
     try {
-      await signIn.social({
+      const { error } = await signIn.social({
         provider: "google",
         callbackURL: "/",
       });
-      toast.success("Google দিয়ে সাইন আপ সফল হয়েছে!");
-    } catch {
-      setError("Google দিয়ে সাইন ইন করা যায়নি।");
+
+      if (error) {
+        toast.error(error.message || "Google দিয়ে সাইন ইন ব্যর্থ হয়েছে।");
+      } else {
+        toast.success("Google দিয়ে সাইন ইন সফল হয়েছে!");
+      }
+    } catch (err) {
+      toast.error("Google দিয়ে সাইন ইন করা যায়নি।");
     }
-    toast.error("Google দিয়ে সাইন ইন করা যায়নি।");
   };
 
-  // GitHub sign in
+  
   const handleSignUpWithGitHub = async () => {
     try {
-      await signIn.social({
+      const { error } = await signIn.social({
         provider: "github",
         callbackURL: "/",
       });
-      toast.success("GitHub দিয়ে সাইন আপ সফল হয়েছে!");
-    } catch {
-      setError("GitHub দিয়ে সাইন ইন করা যায়নি।");
+
+      if (error) {
+        toast.error(error.message || "GitHub দিয়ে সাইন ইন ব্যর্থ হয়েছে।");
+      } else {
+        toast.success("GitHub দিয়ে সাইন ইন সফল হয়েছে!");
+      }
+    } catch (err) {
+      toast.error("GitHub দিয়ে সাইন ইন করা যায়নি।");
     }
-    toast.error("GitHub দিয়ে সাইন ইন করা যায়নি।");
   };
+
 
   return (
     <main className="min-h-screen bg-[#f8fafa] flex items-center justify-center p-4">
@@ -181,7 +206,7 @@ const SignUpPage = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {/* Google Button */}
+         
           <button
             type="button"
             onClick={handleSignUpWithGoogle}
@@ -208,7 +233,7 @@ const SignUpPage = () => {
             <span>Google দিয়ে চালিয়ে যান</span>
           </button>
 
-          {/* GitHub Button */}
+          
           <button
             type="button"
             onClick={handleSignUpWithGitHub}
@@ -224,7 +249,7 @@ const SignUpPage = () => {
           </button>
         </div>
 
-        {/* Footer Navigation */}
+        
         <div className="text-center mt-6 text-xs text-slate-500">
           অ্যাাকাউন্ট আছে?{" "}
           <Link

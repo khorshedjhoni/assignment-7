@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import CategoryLinks from './CategoryLinks';
+import { Suspense } from 'react';
 
 const NavLink = async () => {
     let categories = [];
@@ -26,7 +27,11 @@ const NavLink = async () => {
     aria-label="Categories"
     className="border-t border-gray-100 bg-gray-50/60"
   >
-    <CategoryLinks categories={categories} />
+    <Suspense fallback={
+<div className="mx-auto max-w-6xl px-4 py-2">
+<div className="h-10 animate-pulse rounded-full bg-gray-100" />
+</div>
+}><CategoryLinks categories={categories} /></Suspense>
   </nav>
     );
 };

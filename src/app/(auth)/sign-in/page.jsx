@@ -194,11 +194,11 @@ const SignInPage = () => {
           </button>
         </div>
 
-        {/* Footer Navigation Links */}
+        
         <div className="text-center mt-6 text-xs text-slate-500">
           অ্যাকাউন্ট নেই?{" "}
           <Link
-            href="/signup"
+            href="/sign-up"
             className="text-emerald-700 font-semibold hover:underline"
           >
             সাইন আপ করুন
