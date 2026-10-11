@@ -1,14 +1,11 @@
-import {Noto_Serif_Bengali} from "next/font/google";
+import { Noto_Serif_Bengali } from "next/font/google";
 import "./globals.css";
-import Navbar from "./components/Navbar";
-
+import Navbar from "./components/Navbar/Navbar";
 
 const notoSerifBengali = Noto_Serif_Bengali({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
-
-
 
 export const metadata = {
   title: "Create Next App",
@@ -24,8 +21,7 @@ export default function RootLayout({ children }) {
       <body className="min-h-full flex flex-col">
         <Navbar></Navbar>
         {children}
-        
-        </body>
+      </body>
     </html>
   );
 }

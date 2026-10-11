@@ -47,6 +47,7 @@ const HeroSection = () => {
             <Image
               src="/bazar-hero.png" 
               alt="বাজারের ফলের ঝুড়ি"
+             
               fill
               className="object-contain"
               priority

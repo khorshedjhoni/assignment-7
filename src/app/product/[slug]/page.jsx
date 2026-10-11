@@ -4,8 +4,8 @@ import PriceSummary from "../../components/PriceSummary";
 async function getProductData(slug) {
   try {
     const response = await fetch(
-      "https://api.abcz.workers.dev/api/bazardor/products",
-      { cache: "no-store" }
+      "https://openapi.programming-hero.com/api/bazardor/products",
+      { cache: "no-store" },
     );
 
     if (!response.ok) return null;
@@ -40,7 +40,6 @@ const ProductDetailsPage = async ({ params }) => {
   const todayPrice = Number(product.today) || 0;
   const yesterdayPrice = Number(product.yesterday) || 0;
 
-  
   const priceDifference = Math.abs(todayPrice - yesterdayPrice);
   const isPriceUp = todayPrice >= yesterdayPrice;
 
@@ -56,8 +55,8 @@ const ProductDetailsPage = async ({ params }) => {
     ? Math.round(
         markets.reduce(
           (total, m) => total + (Number(m.min) + Number(m.max)) / 2,
-          0
-        ) / markets.length
+          0,
+        ) / markets.length,
       )
     : todayPrice;
 
@@ -95,9 +94,8 @@ const ProductDetailsPage = async ({ params }) => {
                   {product.categoryNameBn ? `- ${product.categoryNameBn}` : ""}
                 </p>
 
-              
                 <p className="text-xs text-gray-500 pt-1">
-                  গতকালের তুলনায় আজ দাম {isPriceUp ? "বেড়েছে" : "কমেছে"} -{" "}
+                  গতকালের তুলনায় আজ দাম {isPriceUp ? "বেড়েছে" : "কমেছে"} :{" "}
                   <span className="font-bold">{priceDifference}</span> টাকা
                 </p>
               </div>
@@ -112,7 +110,9 @@ const ProductDetailsPage = async ({ params }) => {
 
               <div
                 className={`mt-1 flex items-center justify-center gap-1 text-xs font-semibold ${
-                  priceChange.dir === "down" ? "text-emerald-600" : "text-rose-600"
+                  priceChange.dir === "down"
+                    ? "text-emerald-600"
+                    : "text-rose-600"
                 }`}
               >
                 <span>{priceChange.dir === "down" ? "▼" : "▲"}</span>
@@ -153,6 +153,6 @@ const ProductDetailsPage = async ({ params }) => {
       </div>
     </main>
   );
-}
+};
 
 export default ProductDetailsPage;
