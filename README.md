@@ -63,7 +63,7 @@ Make sure you have the following installed:
    npm run dev
    ```
 
-6. Open http://localhost:3000 in your browser.
+6. Open https://bazardorapp-two.vercel.app/ in your browser.
 
 ## ⚙️ Available Scripts
 
